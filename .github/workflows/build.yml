@@ -47,7 +47,7 @@ jobs:
         with:
           components: rust-src
           toolchain: nightly
-          targets: aarch64-linux-android
+          targets: x86_64-linux-android
       
       - name: Setup Node.js
         uses: actions/setup-node@v5
