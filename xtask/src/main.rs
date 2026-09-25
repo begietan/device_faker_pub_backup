@@ -104,7 +104,7 @@ fn build(release: bool, verbose: bool) -> Result<()> {
     fs::create_dir_all(&temp_dir)?;
 
     let mut cargo = cargo_ndk();
-    let args = vec!["build", "--target", "aarch64-linux-android"];
+    let args = vec!["build", "--target", "x86_64-linux-android"];
     cargo.args(args);
     if release {
         cargo.arg("--release");
@@ -130,7 +130,7 @@ fn build(release: bool, verbose: bool) -> Result<()> {
     fs::remove_file(temp_dir.join(".gitignore")).unwrap();
     file::copy(
         bin_path(release),
-        temp_dir.join("zygisk/arm64-v8a.so"),
+        temp_dir.join("zygisk/x86_64.so"),
         &file::CopyOptions::new().overwrite(true),
     )
     .unwrap();
@@ -179,7 +179,7 @@ fn check(release: bool, verbose: bool) -> Result<()> {
         "+nightly",
         "check",
         "--target",
-        "aarch64-linux-android",
+        "x86_64-linux-android",
         "-Z",
         "trim-paths",
     ]);
@@ -224,7 +224,7 @@ fn lint(fix: bool) -> Result<()> {
         if fix {
             command.args(["--fix", "--allow-dirty", "--allow-staged", "--all"]);
         }
-        command.args(["--target", "aarch64-linux-android"]);
+        command.args(["--target", "x86_64-linux-android"]);
         command
     };
 
@@ -260,14 +260,14 @@ fn temp_dir(release: bool) -> PathBuf {
 
 fn bin_path(release: bool) -> PathBuf {
     Path::new("target")
-        .join("aarch64-linux-android")
+        .join("x86_64-linux-android")
         .join(if release { "release" } else { "debug" })
         .join("libzygisk.so")
 }
 
 fn cli_bin_path(release: bool) -> PathBuf {
     Path::new("device_faker_cli/target")
-        .join("aarch64-linux-android")
+        .join("x86_64-linux-android")
         .join(if release { "release" } else { "debug" })
         .join("device_faker_cli")
 }
@@ -275,7 +275,7 @@ fn cli_bin_path(release: bool) -> PathBuf {
 fn cargo_ndk() -> Command {
     let mut command = Command::new("cargo");
     command
-        .args(["+nightly", "ndk", "--platform", "31", "-t", "arm64-v8a"])
+        .args(["+nightly", "ndk", "--platform", "31", "-t", "x86_64"])
         .env("RUSTFLAGS", "-C default-linker-libraries");
     command
 }
